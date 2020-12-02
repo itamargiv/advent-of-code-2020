@@ -8,16 +8,13 @@ def validate(password, char, minim, maxim):
     return minim <= count and count <= maxim
 
 def extract_args(line):
-    # Split the arguments from the string (without the newline char)
-    args = line[:-1].split(" ")
+    # Extract the arguments from the string
+    args = match("^(\d+)\-(\d+) (\w): (\w+)\n$", line).groups()
     
-    # Extract and typecast min and max
-    minim, maxim = map(int, args[0].split("-"))
+    # Unpack args and typecast min and max
+    minim, maxim = map(int, args[:2])
+    char, password = args[2:]
     
-    # Clean the char to check 
-    char = args[1][0]
-    password = args[2]
-
     return (password, char, minim, maxim)
 
 
