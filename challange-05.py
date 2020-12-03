@@ -1,26 +1,34 @@
 from functools import reduce
 
-def count_octos(slope, octo_sum, line, index):
-    if index % slope[1] != 0:
-        return octo_sum
+def create_counter(line, index):
+    def count_octos(slope, octo_sum):
+        if index % slope[1] != 0:
+            return octo_sum
+        
+        position = int(index * slope[0] / slope[1])
+        cursor = position % len(line)
+
+        return octo_sum + 1 if line[cursor] is '#' else octo_sum
     
-    position = int(index * slope[0] / slope[1])
-    cursor = position % len(line)
+    return count_octos
 
-    return octo_sum + 1 if line[cursor] is '#' else octo_sum
+def create_sum(slopes):
+    def sum_octos(data, line):
+        index = data["index"]
+        line = line.strip()
 
-def sum_octos(data, line, slopes):
-    index = data["index"]
-    sums = map(
-        lambda slope, octo_sum: count_octos(slope, octo_sum, line, index),
-        slopes,
-        data["sums"]
-    )
+        sums = map(
+            create_counter(line, index),
+            slopes,
+            data["sums"]
+        )
 
-    return {
-        "sums": list(sums),
-        "index": index + 1
-    }
+        return {
+            "sums": list(sums),
+            "index": index + 1
+        }
+
+    return sum_octos
 
 with open('./inputs/input-0C.txt') as f:
     slopes = [
@@ -31,7 +39,7 @@ with open('./inputs/input-0C.txt') as f:
         (1, 2)
     ]
 
-    data = reduce(lambda acc, line: sum_octos(acc, line.strip(), slopes), f.readlines(), {
+    data = reduce(create_sum(slopes), f.readlines(), {
         "sums": [0, 0, 0, 0, 0],
         "index": 0
     })
