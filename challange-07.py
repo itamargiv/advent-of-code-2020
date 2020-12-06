@@ -1,5 +1,6 @@
 from functools import reduce
 from re import findall, match
+from read_util import readlines_batch
 
 def validate_measure(value, units):
     quantity, unit = match(r'(\d+)(\w*)', value).groups()
@@ -24,32 +25,16 @@ def validate(value, rule):
 def validate_document(document, rules):
     return all(key in document and validate(document[key], rule) for key, rule in rules.items())
 
-
-def parse_document_part(part):
+def parse_document(part):
     kv_pairs = findall(r'(\w+):([#\w\d]+)', part)
     return dict(kv_pairs)
 
-
 def create_document_processor(rules):
-    def process_documents(data, line):
-        document = data["document"]
+    def process_documents(count, batch):
+        document = parse_document(batch)
+        is_valid = validate_document(document, rules)
 
-        if line is '\n':
-            is_valid = validate_document(document, rules)
-            if is_valid: print(str(document) + ',')
-
-            return {
-                "document": {},
-                "sum": data["sum"] + 1 if is_valid else data["sum"]
-            }
-
-        return {
-            **data,
-            "document": {
-                **parse_document_part(line),
-                **document
-            }
-        }
+        return count + 1 if is_valid else count
     
     return process_documents
 
@@ -69,13 +54,8 @@ with open('./inputs/input-0D.txt') as f:
         "pid": { "pattern": r'^[0-9]{9}$' }
     }
 
-    data = reduce(create_document_processor(rules), f, {
-        "document": {},
-        "sum": 0
-    })
-    last = data["document"]
-
-    if last and validate_document(last, rules):
-        print(data["sum"] + 1)
-    else:
-        print(data["sum"])
+    print(reduce(
+        create_document_processor(rules), 
+        readlines_batch(f),
+        0
+    ))
