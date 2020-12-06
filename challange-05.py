@@ -36,6 +36,6 @@ with open('./inputs/input-0C.txt') as f:
     data = reduce(
         create_sum(slopes), 
         enumerate(strip_lines(f)), 
-        [0]*len(slopes) # <-- Initial value: a list od 0 the same size as slopes 
+        [0]*len(slopes) # <-- Initial value: a list of 0 the same size as slopes 
     ) 
     print(prod(data))
