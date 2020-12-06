@@ -5,11 +5,11 @@ from re import match
 def validate(password, char, minim, maxim):
     count = password.count(char)
 
-    return minim <= count and count <= maxim
+    return minim <= count <= maxim
 
 def extract_args(line):
     # Extract the arguments from the string
-    args = match("^(\d+)\-(\d+) (\w): (\w+)\n$", line).groups()
+    args = match(r'^(\d+)\-(\d+) (\w): (\w+)\n$', line).groups()
     
     # Unpack args and typecast min and max
     minim, maxim = map(int, args[:2])
@@ -25,4 +25,4 @@ def sum_valid(sum, line):
     return sum + 1 if is_valid else sum
 
 with open('./inputs/input-0B.txt') as f:
-    print(reduce(sum_valid, f.readlines(), 0))
+    print(reduce(sum_valid, f, 0))
