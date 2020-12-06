@@ -22,21 +22,12 @@ def validate_pattern(value, pattern):
 def validate(value, rule):
     return all(globals()[f"validate_{name}"](value, constraint) for name, constraint in rule.items())
 
-def validate_document(document, rules):
+def validate_rules(rules, document):
     return all(key in document and validate(document[key], rule) for key, rule in rules.items())
 
 def parse_document(part):
     kv_pairs = findall(r'(\w+):([#\w\d]+)', part)
     return dict(kv_pairs)
-
-def create_document_processor(rules):
-    def process_documents(count, batch):
-        document = parse_document(batch)
-        is_valid = validate_document(document, rules)
-
-        return count + 1 if is_valid else count
-    
-    return process_documents
 
 with open('./inputs/input-0D.txt') as f:
     rules = {
@@ -54,8 +45,7 @@ with open('./inputs/input-0D.txt') as f:
         "pid": { "pattern": r'^[0-9]{9}$' }
     }
 
-    print(reduce(
-        create_document_processor(rules), 
-        readlines_batch(f),
-        0
+    print(sum(
+        validate_rules(rules, parse_document(batch))
+        for batch in readlines_batch(f)
     ))
