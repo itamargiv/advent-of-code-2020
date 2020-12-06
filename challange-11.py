@@ -16,7 +16,7 @@ with open('./inputs/test-0F.txt') as given:
     assert sum_common(0, 'a\nbc\n') == 0, "Cannot discount multiple chars across lines"
     assert sum_common(0, 'a\na\n') == 1, "Cannot dedupe recurring chars"
     assert sum_common(0, 'a\nab\n') == 1, "Cannot dedupe and sum across lines"
-    assert sum_common(0, 'ab\nac\n') == 1, "Cannot dedupe and sum across lines"
+    assert sum_common(0, 'ab\nac\n') == 1, "Cannot dedupe and discount across lines"
     assert sum_common(5, 'ab\n') == 7, "Cannot add to given sum"
 
     actual = reduce(sum_common, readlines_batch(given), 0)
