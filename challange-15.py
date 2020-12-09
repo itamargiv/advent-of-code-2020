@@ -62,15 +62,10 @@ def get_exit_points(program):
         
 
     return stack_points
-        
 
 def analyze(program):
     reverse_stack = get_exit_points(program)
     possible_solutions = get_possible_solutions(program)
-
-    stack = [summary['idx'] for summary in possible_solutions]
-    original_summaries = [get_next_line(idx, program[idx]["command"]) for idx in stack]
-    exec_point = [idx for idx in original_summaries if idx in reverse_stack]
     
     ids_to_fix = [summary['idx'] for summary in possible_solutions if summary["next"] in reverse_stack or summary["next"] > len(program)]
 
@@ -103,34 +98,3 @@ with open('./inputs/test-0H.txt') as given:
 
     program = load_program(given)
     print(analyze(program))
-
-# def analyze(program):
-#     idx = 0
-#     call_stack = []
-#     current = program[idx]
-#     tried = False
-#     ops = {
-#         '+': operator.add,
-#         '-': operator.sub
-#     }
-
-#     while current:
-#         (command, sign, integer) = current["command"]
-#         call_stack.append(idx)
-#         last = idx
-#         idx = get_next_line(idx, current["command"])
-        
-#         if idx in call_stack:
-#             print(call_stack, idx)
-
-#             if tried: raise Exception(f"Infinite loop from instruction {last + 1}: {current['command']}")
-
-#             print(f"Infinite loop from instruction {last + 1}: {current['command']}, attempting to fix...")
-            
-#             idx = ops[sign](last, integer) if command == 'nop' else last + 1
-#             tried = True
-        
-#         current = program[idx] if idx < len(program) else False
-
-#     return call_stack
-

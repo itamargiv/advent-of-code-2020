@@ -196,7 +196,7 @@ acc +20
 acc +30
 jmp +375
 nop +312
-nop +111
+jmp +111
 acc +23
 jmp -15
 acc +27
