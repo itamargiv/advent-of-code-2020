@@ -1,19 +1,15 @@
 from functools import reduce
+from read_util import strip_lines
 
-def parse_binary(code, zeros, ones):
+def parse_binary(code, ones):
     binary_str = "".join(map(
-        lambda char: '0' if char in zeros else '1' if char in ones else char, 
+        lambda char: '1' if char in ones else '0', 
         code
     )) 
 
     return int(binary_str, 2)
 
-def highest_id(highest, line):
-    part_code = line.strip()
-    id = parse_binary(part_code, 'FL', 'BR')
-    
-    return id if id > highest else highest
-
 with open('./inputs/input-0E.txt') as f:
-    print(reduce(highest_id, f, 0))
-
+    print(max(
+        parse_binary(line, 'BR') for line in strip_lines(f)
+    ))
