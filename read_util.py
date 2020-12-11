@@ -35,4 +35,32 @@ def test_strip_lines():
             '.#..#...#.#'
         ], "Cannot be comrehended into a list"
 
-        
+def parse_integers(read_file):
+    for line in read_file:
+        yield int(line)
+
+def test_parse_integers():
+    with open('./inputs/test-0I.txt') as given:
+        assert next(parse_integers(given)) == 35
+        assert [line for line in parse_integers(given)] == [
+            20,
+            15,
+            25,
+            47,
+            40,
+            62,
+            55,
+            65,
+            95,
+            102,
+            117,
+            150,
+            182,
+            127,
+            219,
+            299,
+            277,
+            309,
+            576
+        ]
+
