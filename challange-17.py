@@ -20,30 +20,27 @@ def find_outlier(buffer, feed):
         else find_outlier(buffer[1:] + [n], feed)
     )
 
-def get_sum_range(n, feed):
-    cont_range = []
-    current = 0
+def find_sum_range(current, feed, n):
+    range_sum = sum(current)
 
-    while current != n:
-        cont_range.append(next(feed))
+    if range_sum == n: return current
 
-        while current > n: 
-            cont_range = cont_range[1:]
-            current = sum(cont_range)
-        
-        current = sum(cont_range)
+    next_range = (
+        current[1:] if range_sum > n
+        else current + [next(feed)]
+    )
 
-    return cont_range
+    return find_sum_range(next_range, feed, n)
 
 # Result
 with open('./inputs/input-0I.txt') as f:
     feed = parse_integers(f)
     outlier = find_outlier(get_preamble(25, feed), feed)
     f.seek(0)
-    cont_range = get_sum_range(outlier, feed)
+    cont_range = find_sum_range([], feed, outlier)
 
     print(outlier, cont_range)
-    print(sum([min(cont_range), max(cont_range)]))
+    print(min(cont_range) + max(cont_range))
 
 # Tests
 with open('./inputs/test-0I.txt') as given:
@@ -55,8 +52,9 @@ with open('./inputs/test-0I.txt') as given:
     feed = parse_integers(given)
     outlier = find_outlier(get_preamble(5, feed), feed) 
     given.seek(0)
-    cont_range = get_sum_range(outlier, feed) 
+
+    cont_range = find_sum_range([], feed, outlier)
 
     assert outlier == 127
     assert cont_range == [15, 25, 47, 40]
-    assert sum([min(cont_range), max(cont_range)]) == 62
+    assert min(cont_range) + max(cont_range) == 62
