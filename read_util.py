@@ -1,3 +1,5 @@
+from bisect import insort
+
 def parse_integers(read_file):
     for line in read_file:
         yield int(line)
@@ -43,6 +45,45 @@ def test_readlines_batch():
         assert next(readlines_batch(given)) == 'abc\n', "Cannot read single line"
         assert next(readlines_batch(given)) == 'a\nb\nc\n', "Cannot collect multiple lines"
         assert [batch for batch in readlines_batch(given)] == ['ab\nac\n', 'a\na\na\na\n', 'b'], "Cannot be comprehended into a list"
+
+def readlines_sort(read_file):
+    sorted = []
+
+    for line in read_file:
+        insort(sorted, line)
+
+    return sorted
+
+def test_readlines_sort():
+    with open('./inputs/test-0J.txt') as given:
+        assert readlines_sort(given) == [
+            '1\n',
+            '10\n',
+            '11\n',
+            '12\n',
+            '15\n',
+            '16\n',
+            '19\n',
+            '4',
+            '5\n',
+            '6\n',
+            '7\n'
+        ], 'Cannot sort strings'
+
+        given.seek(0)
+        assert readlines_sort(parse_integers(given)) == [
+            1,
+            4,
+            5,
+            6,
+            7,
+            10,
+            11,
+            12,
+            15,
+            16,
+            19
+        ], 'Cannot sort integers'
 
 def strip_lines(read_file):
     for line in read_file:
