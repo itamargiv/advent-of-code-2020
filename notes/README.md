@@ -1,0 +1,1 @@
+This is where I keep notes for various challanges. These ar mostly expressions of my tryong to grapple with mathematical concepts I have little to no experience in, or try out things in python that I never tried before, and probably will not make a lot to anyone besides me.
