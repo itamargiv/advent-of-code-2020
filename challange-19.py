@@ -18,17 +18,17 @@ def find_diff_dist(numbers):
     tail = numbers + [numbers[-1] + 3]
     diffs = list(map(lambda last, n: n - last, head, tail))
 
-    print(diffs)
+    print("".join(str(d) for d in diffs).split('3'))
     return Counter(diffs)
     
 
 # Result
-# with open('./inputs/input-0J.txt') as f:
-#     numbers = readlines_sort(parse_integers(f))
-#     dist = find_diff_dist(numbers)
+with open('./inputs/input-0J.txt') as f:
+    numbers = readlines_sort(parse_integers(f))
+    dist = find_diff_dist(numbers)
 
-#     print(dist)
-#     print(dist[1] * dist[3])
+    print(dist)
+    print(dist[1] * dist[3])
 
 # Tests
 with open('./inputs/test-0J.txt') as given:
